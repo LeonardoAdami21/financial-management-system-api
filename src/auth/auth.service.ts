@@ -27,7 +27,13 @@ export class AuthService {
 
   async register(dto: RegisterUserDto) {
     try {
-      const { name, password, role } = dto;
+      const { name, password, role, document } = dto;
+      if (!name || !password || !document) {
+        throw new BadRequestException('Missing required fields');
+      }
+      if (document.length < 11 || document.length > 14) {
+        throw new BadRequestException('Invalid document');
+      }
       const hashedPassword = await bcrypt.hash(password, 10);
       const passwordConfirmation = await bcrypt.hash(password, hashedPassword);
       const newUser = await this.authRepository.create({
