@@ -12,9 +12,9 @@ import { RegisterUserDto } from './dto/register-user.dto';
 import * as bcrypt from 'bcrypt';
 import { LoginUserDto } from './dto/login-user.dto';
 import { JwtService } from '@nestjs/jwt';
-import { environmentVariables } from '../env/envoriment';
 import { JwtStrategy } from '../guards/jwt.strategy';
-import { enumRole } from '@prisma/client';
+import { userRole } from '@prisma/client';
+import { jwtSecret } from '../env/envoriment';
 
 @Injectable()
 export class AuthService {
@@ -27,14 +27,14 @@ export class AuthService {
 
   async register(dto: RegisterUserDto) {
     try {
-      const {name, password, role } = dto;
+      const { name, password, role } = dto;
       const hashedPassword = await bcrypt.hash(password, 10);
       const passwordConfirmation = await bcrypt.hash(password, hashedPassword);
       const newUser = await this.authRepository.create({
         ...dto,
         name,
         password: passwordConfirmation,
-        role: role || enumRole.USER,
+        role: role || userRole.USER,
       });
       if (passwordConfirmation !== hashedPassword) {
         throw new UnprocessableEntityException('Error hashing password');
@@ -61,7 +61,7 @@ export class AuthService {
         role: user.role,
       });
       const token = this.jwtService.sign(payload, {
-        secret: environmentVariables.jwtSecret,
+        secret: jwtSecret,
         expiresIn: '1d',
       });
       return { access_token: token };
