@@ -31,6 +31,13 @@ export class AuthRepository implements AuthRepositoryInterface {
       },
     });
   }
+  async findByDocument(document: string): Promise<any> {
+    return await this.authRepository.findUnique({
+      where: {
+        document: document,
+      },
+    });
+  }
   findUserById(id: number): Promise<any> {
     throw new Error('Method not implemented.');
   }
