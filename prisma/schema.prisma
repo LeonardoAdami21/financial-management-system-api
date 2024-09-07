@@ -43,8 +43,8 @@ model Users {
   password  String
   role  userRole     @default(USER)
   accounts Accounts[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
 }
 
 model Accounts{
@@ -53,10 +53,9 @@ model Accounts{
   users Users @relation(fields: [userId], references: [id])
   balance Float @default(0)
   status accountStatus @default(ACTIVE)
-  transactionsId Int
   transactions Transactions[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
 }
 
 model Transactions{
@@ -65,6 +64,7 @@ model Transactions{
   account     Accounts     @relation(fields: [accountId], references: [id])
   type        TransactionType
   amount      Float
-  createdAt   DateTime    @default(now())
   status      TransactionStatus
+  createdAt   DateTime    @default(now())
+  updatedAt DateTime? @updatedAt
 }

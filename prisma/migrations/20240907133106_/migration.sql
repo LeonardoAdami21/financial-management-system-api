@@ -18,8 +18,8 @@ CREATE TABLE "Users" (
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "role" "userRole" NOT NULL DEFAULT 'USER',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3),
 
     CONSTRAINT "Users_pkey" PRIMARY KEY ("id")
 );
@@ -30,9 +30,8 @@ CREATE TABLE "Accounts" (
     "userId" INTEGER NOT NULL,
     "balance" DOUBLE PRECISION NOT NULL DEFAULT 0,
     "status" "accountStatus" NOT NULL DEFAULT 'ACTIVE',
-    "transactionsId" INTEGER NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3),
 
     CONSTRAINT "Accounts_pkey" PRIMARY KEY ("id")
 );
@@ -43,8 +42,9 @@ CREATE TABLE "Transactions" (
     "accountId" INTEGER NOT NULL,
     "type" "TransactionType" NOT NULL,
     "amount" DOUBLE PRECISION NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "status" "TransactionStatus" NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3),
 
     CONSTRAINT "Transactions_pkey" PRIMARY KEY ("id")
 );
