@@ -4,6 +4,7 @@ import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtSecret } from './env/envoriment';
 import { AdminModule } from './admin/admin.module';
+import { AccountsModule } from './accounts/accounts.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { AdminModule } from './admin/admin.module';
     }),
     AuthModule,
     AdminModule,
+    AccountsModule,
   ],
 })
 export class AppModule {}
