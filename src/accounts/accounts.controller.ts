@@ -42,7 +42,7 @@ export class AccountsController {
     return this.accountsService.findAll();
   }
 
-  @Role('user')
+  @Role('USER')
   @ApiOperation({ summary: 'Create account' })
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiCreatedResponse({ description: 'Account created successfully' })
