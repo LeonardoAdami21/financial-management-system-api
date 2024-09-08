@@ -6,6 +6,7 @@ import { jwtSecret } from './env/envoriment';
 import { AdminModule } from './admin/admin.module';
 import { AccountsModule } from './accounts/accounts.module';
 import { UsersModule } from './users/users.module';
+import { TransactionsModule } from './transactions/transactions.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { UsersModule } from './users/users.module';
     AdminModule,
     AccountsModule,
     UsersModule,
+    TransactionsModule,
   ],
 })
 export class AppModule {}
