@@ -98,21 +98,32 @@ export class TransactionsService {
     }
   }
 
-	async getAccountStatement(accountId: number, startDate: Date, endDate: Date) {
-		try {
-			const transactions = await this.transactionsRepository.getAccountStatement(accountId, startDate, endDate);
-			return transactions;
-		} catch (error) {
-			throw new InternalServerErrorException('Error getting account statement');
-		}
-	}
+  async getAccountStatement(accountId: number, startDate: Date, endDate: Date) {
+    try {
+      const formatedAccountId = Number(accountId);
+      const transactions =
+        await this.transactionsRepository.getAccountStatement(
+          +formatedAccountId,
+          startDate,
+          endDate,
+        );
+      return transactions;
+    } catch (error) {
+      throw new InternalServerErrorException('Error getting account statement');
+    }
+  }
 
-	async getAggregatedReport(startDate: Date, endDate: Date, type?: string) {
-		try {
-			const transactions = await this.transactionsRepository.getAggregatedReport(startDate, endDate, type);
-			return transactions;
-		} catch (error) {
-			throw new InternalServerErrorException('Error getting aggregated report');
-		}
-	}
+  async getAggregatedReport(startDate: Date, endDate: Date, type?: string) {
+    try {
+      const transactions =
+        await this.transactionsRepository.getAggregatedReport(
+          startDate,
+          endDate,
+          type,
+        );
+      return transactions;
+    } catch (error) {
+      throw new InternalServerErrorException('Error getting aggregated report');
+    }
+  }
 }
