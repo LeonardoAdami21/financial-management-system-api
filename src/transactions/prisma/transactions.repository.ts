@@ -51,6 +51,12 @@ export class TransactionsRepository implements TransactionsRepositoryInterface {
           accountId: updatedAccount.id,
         },
       });
+      await this.dbClient.usersHistory.create({
+        data: {
+          userId: account.userId,
+          action: `Withdrew ${amount} from account ${account.id}`,
+        },
+      });
       return {
         updatedAccount,
         transaction,
@@ -59,6 +65,16 @@ export class TransactionsRepository implements TransactionsRepositoryInterface {
       throw new InternalServerErrorException(error.message);
     }
   }
+
+  async userHistory(userId: number, action: string) {
+    return await this.dbClient.usersHistory.create({
+      data: {
+        userId: userId,
+        action: action,
+      },
+    });
+  }
+
   async deposit(dto: TransactionDepositDto) {
     try {
       const { accountId, amount } = dto;

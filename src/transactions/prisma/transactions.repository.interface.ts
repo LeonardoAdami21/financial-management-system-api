@@ -8,6 +8,7 @@ export interface TransactionsRepositoryInterface {
   withdraw(dto: TransactionWithdrawDto);
   deposit(dto: TransactionDepositDto);
   findByAccountId(accountId: number);
+  userHistory(userId: number, action: string);
   transferance(dto: TransactionTransferDto);
   getAccountStatement(accountId: number, startDate: Date, endDate: Date);
   getAggregatedReport(startDate: Date, endDate: Date, type?: string);

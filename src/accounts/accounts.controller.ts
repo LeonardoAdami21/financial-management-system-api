@@ -32,7 +32,7 @@ import { UpdateAccountDto } from './dto/update-account.dto';
 export class AccountsController {
   constructor(private readonly accountsService: AccountsService) {}
 
-  @Role('admin')
+  @Role('ADMIN')
   @ApiOperation({ summary: 'Get all accounts' })
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiOkResponse({ description: 'Get all accounts' })
@@ -56,7 +56,7 @@ export class AccountsController {
     return this.accountsService.create(dto, req.user.id);
   }
 
-  @Role('admin')
+  @Role('ADMIN')
   @ApiOperation({ summary: 'Get account balance' })
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiOkResponse({ description: 'Get account balance' })
@@ -68,14 +68,14 @@ export class AccountsController {
     return this.accountsService.getAccountBalance(id);
   }
 
-  @Role('admin')
+  @Role('ADMIN')
   @ApiOperation({ summary: 'Activate or deactivate account' })
   @ApiOkResponse({ description: 'Account updated successfully' })
   @ApiNotFoundResponse({ description: 'Account not found' })
   @ApiNotFoundResponse({ description: 'Admin not found' })
   @ApiBadRequestResponse({ description: 'Error updating account' })
   @Patch(':id')
-  update(
+  activateOrDeactivate(
     @Param('id') id: number,
     @Body() dto: UpdateAccountDto,
     @Request() req: { user: { id: number } },
@@ -83,7 +83,7 @@ export class AccountsController {
     return this.accountsService.update(id, dto, req.user.id);
   }
 
-  @Role('user')
+  @Role('USER')
   @ApiOperation({ summary: 'Delete account' })
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiOkResponse({ description: 'Account deleted successfully' })

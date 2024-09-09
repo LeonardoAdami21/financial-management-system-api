@@ -45,6 +45,10 @@ export class AdminService {
       if (passwordConfirmation !== hashedPassword) {
         throw new UnprocessableEntityException('Error hashing password');
       }
+      await this.adminRepository.userHistory(
+        newUser.id,
+        `Admin ${newUser.name} created successfully`,
+      );
       return newUser;
     } catch (error) {
       throw new InternalServerErrorException(error.message);
@@ -70,6 +74,10 @@ export class AdminService {
         secret: jwtSecret,
         expiresIn: '1d',
       });
+      await this.adminRepository.userHistory(
+        admin.id,
+        `Admin ${admin.name} logged in successfully`,
+      );
       return { access_token: token };
     } catch (error) {
       throw new Error(error.message);

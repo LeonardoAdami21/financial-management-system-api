@@ -25,6 +25,16 @@ CREATE TABLE "Users" (
 );
 
 -- CreateTable
+CREATE TABLE "UsersHistory" (
+    "id" SERIAL NOT NULL,
+    "action" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "userId" INTEGER NOT NULL,
+
+    CONSTRAINT "UsersHistory_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Accounts" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
@@ -54,6 +64,9 @@ CREATE UNIQUE INDEX "Users_document_key" ON "Users"("document");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Users_email_key" ON "Users"("email");
+
+-- AddForeignKey
+ALTER TABLE "UsersHistory" ADD CONSTRAINT "UsersHistory_userId_fkey" FOREIGN KEY ("userId") REFERENCES "Users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Accounts" ADD CONSTRAINT "Accounts_userId_fkey" FOREIGN KEY ("userId") REFERENCES "Users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
