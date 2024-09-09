@@ -7,6 +7,7 @@ export interface AccountRepositoryInterface {
   findAll(): Promise<Accounts[]>;
   findById(id: number);
   findAdminById(userId: number);
+  userHistory(userId: number, action: string);
   toggleActiveAccountStatus(id: number, dto: UpdateAccountDto, userId: number);
   delete(id: number, userId: number);
 }

@@ -45,6 +45,10 @@ export class AuthService {
       if (passwordConfirmation !== hashedPassword) {
         throw new UnprocessableEntityException('Error hashing password');
       }
+      await this.authRepository.userHistory(
+        newUser.id,
+        `User ${newUser.name} created successfully`,
+      );
       return newUser;
     } catch (error) {
       throw new InternalServerErrorException(error.message);
@@ -70,6 +74,10 @@ export class AuthService {
         secret: jwtSecret,
         expiresIn: '1d',
       });
+      await this.authRepository.userHistory(
+        user.id,
+        `User ${user.name} logged in successfully`,
+      );
       return { access_token: token };
     } catch (error) {
       throw new Error(error.message);

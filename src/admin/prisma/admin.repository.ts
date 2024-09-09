@@ -36,8 +36,16 @@ export class AdminRepository implements AdminRepositoryInterface {
     });
   }
 
+  async userHistory(userId: number, action: string) {
+    return await this.dbClient.usersHistory.create({
+      data: {
+        userId: userId,
+        action: action,
+      },
+    });
+  }
+
   async delete(id: number): Promise<any> {
     return await this.authRepository.delete({ where: { id } });
   }
-
 }

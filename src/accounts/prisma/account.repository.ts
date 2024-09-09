@@ -16,6 +16,14 @@ export class AccountRepository implements AccountRepositoryInterface {
     });
     return newAccount;
   }
+  async userHistory(userId: number, action: string) {
+    return await this.dbClient.usersHistory.create({
+      data: {
+        userId: userId,
+        action: action,
+      },
+    });
+  }
   async findAll() {
     return await this.dbClient.accounts.findMany();
   }

@@ -17,11 +17,22 @@ export class AuthRepository implements AuthRepositoryInterface {
     });
   }
   async create(dto: RegisterUserDto) {
-    return await this.authRepository.create({
+    const user = await this.authRepository.create({
       data: dto,
-      
+    });
+    await this.userHistory(user.id, `User ${user.name} created successfully`);
+    return user
+  }
+
+  async userHistory(userId: number, action: string) {
+    return await this.dbClient.usersHistory.create({
+      data: {
+        userId: userId,
+        action: action,
+      },
     });
   }
+
   async findAll() {
     return await this.authRepository.findMany({
       select: {
