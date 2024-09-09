@@ -5,10 +5,10 @@ import { TransactionTransferDto } from '../dto/transaction-transfer.dto';
 
 export interface TransactionsRepositoryInterface {
   findAll(): Promise<Transactions[]>;
-  withdraw(dto: TransactionWithdrawDto): Promise<Transactions>;
-  deposit(dto: TransactionDepositDto): Promise<Transactions>;
-  findByAccountId(accountId: number)
-  transferance(dto: TransactionTransferDto): Promise<Transactions>;
+  withdraw(dto: TransactionWithdrawDto);
+  deposit(dto: TransactionDepositDto);
+  findByAccountId(accountId: number);
+  transferance(dto: TransactionTransferDto);
   getAccountStatement(accountId: number, startDate: Date, endDate: Date);
   getAggregatedReport(startDate: Date, endDate: Date, type?: string);
 }

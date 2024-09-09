@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   Request,
+  Query,
 } from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
 import {
@@ -18,6 +19,7 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 import { TransactionDepositDto } from './dto/transaction-deposit.dto';
@@ -27,6 +29,7 @@ import { JwtAuthGuard } from '../guards/jwt.guard';
 import { RolesGuard } from '../guards/role.strategy';
 import { Role } from '../guards/role.guard';
 import { TransactionGuard } from '../guards/transaction.guard';
+import { TransactionType } from '@prisma/client';
 
 @Controller('transactions')
 @ApiBearerAuth()
@@ -83,36 +86,45 @@ export class TransactionsController {
     return this.transactionsService.findAll();
   }
 
-  @Role('user')
+  @Role('USER')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiOperation({ summary: 'Get account statement' })
   @ApiOkResponse({ description: 'Get all account statement' })
   @ApiInternalServerErrorResponse({ description: 'Error finding transactions' })
-  @Get(':id/statement')
+  @Get(':accountId/statement')
   getAccountStatement(
     @Param('accountId') accountId: number,
-    @Param('startDate') startDate: Date,
-    @Param('endDate') endDate: Date,
+    @Query('startDate') startDate: string,
+    @Query('endDate') endDate: string,
   ) {
     const initalDate = new Date(startDate);
     const finalDate = new Date(endDate);
+    const formatedAccountId = Number(accountId);
     return this.transactionsService.getAccountStatement(
-      +accountId,
+      formatedAccountId,
       initalDate,
       finalDate,
     );
   }
 
-  @Role('admin')
+  @Role('ADMIN')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @ApiOperation({ summary: 'Get aggregated report' })
+  @ApiOperation({ summary: 'Get aggregated admin report' })
   @ApiOkResponse({ description: 'Get all aggregated report' })
   @ApiInternalServerErrorResponse({ description: 'Error finding transactions' })
-  @Get(':id/report')
+  @Get('/report')
+  @ApiQuery({ description: 'Initial date', name: 'startDate', required: true })
+  @ApiQuery({ description: 'Final date', name: 'endDate', required: true })
+  @ApiQuery({
+    description: 'Type of report',
+    name: 'type',
+    required: false,
+    enum: TransactionType,
+  })
   getAggregatedReport(
-    @Param('startDate') startDate: Date,
-    @Param('endDate') endDate: Date,
-    @Param('type') type?: string,
+    @Query('startDate') startDate: string,
+    @Query('endDate') endDate: string,
+    @Query('type') type?: string,
   ) {
     const initalDate = new Date(startDate);
     const finalDate = new Date(endDate);

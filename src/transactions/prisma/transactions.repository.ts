@@ -18,7 +18,7 @@ export class TransactionsRepository implements TransactionsRepositoryInterface {
   async findAll() {
     return await this.dbClient.transactions.findMany({});
   }
-  async withdraw(dto: TransactionWithdrawDto): Promise<Transactions> {
+  async withdraw(dto: TransactionWithdrawDto) {
     try {
       const { accountId, amount } = dto;
       if (amount <= 0) {
@@ -46,17 +46,20 @@ export class TransactionsRepository implements TransactionsRepositoryInterface {
       const transaction = await this.dbClient.transactions.create({
         data: {
           type: 'WITHDRAWAL',
-          status: 'PENDING',
+          status: 'COMPLETED',
           amount,
           accountId: updatedAccount.id,
         },
       });
-      return transaction;
+      return {
+        updatedAccount,
+        transaction,
+      };
     } catch (error) {
-      throw new Error(error.message);
+      throw new InternalServerErrorException(error.message);
     }
   }
-  async deposit(dto: TransactionDepositDto): Promise<Transactions> {
+  async deposit(dto: TransactionDepositDto) {
     try {
       const { accountId, amount } = dto;
       if (amount <= 0) {
@@ -83,15 +86,15 @@ export class TransactionsRepository implements TransactionsRepositoryInterface {
           type: 'DEPOSIT',
           status: 'COMPLETED',
           amount,
-          accountId: updatedAccount.id,
+          accountId: accountId,
         },
       });
-      return transaction;
+      return { updatedAccount, transaction };
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
   }
-  async transferance(dto: TransactionTransferDto): Promise<Transactions> {
+  async transferance(dto: TransactionTransferDto) {
     try {
       const { fromAccountId, toAccountId, amount } = dto;
       if (amount <= 0) {
@@ -131,12 +134,16 @@ export class TransactionsRepository implements TransactionsRepositoryInterface {
       const transaction = await this.dbClient.transactions.create({
         data: {
           type: 'TRANSFER',
-          status: 'PENDING',
+          status: 'COMPLETED',
           accountId: fromAccount.id,
           amount,
         },
       });
-      return transaction;
+      return {
+        updatedFromAccount,
+        updatedToAccount,
+        transaction,
+      };
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
@@ -166,7 +173,7 @@ export class TransactionsRepository implements TransactionsRepositoryInterface {
     }
     const transactions = await this.dbClient.transactions.findMany({
       where: {
-        accountId: account.id,
+        accountId: accountId,
         createdAt: {
           gte: startDate,
           lte: endDate,
@@ -174,7 +181,7 @@ export class TransactionsRepository implements TransactionsRepositoryInterface {
       },
     });
     return {
-      accountId: account.id,
+      accountId: accountId,
       balance: account.balance,
       transactions,
     };
@@ -186,6 +193,7 @@ export class TransactionsRepository implements TransactionsRepositoryInterface {
         gte: startDate,
         lte: endDate,
       },
+      type: type
     };
     if (type) {
       filter.type = type;
@@ -193,7 +201,7 @@ export class TransactionsRepository implements TransactionsRepositoryInterface {
     const transactions = await this.dbClient.transactions.findMany({
       where: filter,
       orderBy: {
-        createdAt: 'asc',
+        createdAt: 'desc',
       },
       include: {
         account: true,
