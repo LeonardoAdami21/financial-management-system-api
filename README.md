@@ -22,15 +22,27 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+## Description of how to use a api
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-## Installation
+## Installation : 
+- Clone the repository: [text](https://github.com/LeonardoAdami21/financial-management-system-api)
+- Extrat and in teh terminal instal the dependencies using:
 
 ```bash
 $ yarn install
 ```
+
+- This command will generate a .env file and you follow the .env.example variables to API run correct.
+- To create a database its only go to neon: [text](https://neon.tech/) and create with the name of api
+
+``` bash
+# Command to generate a migration
+$ yarn migrate
+
+```
+
 
 ## Running the app
 
@@ -44,6 +56,8 @@ $ yarn run start:dev
 # production mode
 $ yarn run start:prod
 ```
+
+
 
 ## Test
 
