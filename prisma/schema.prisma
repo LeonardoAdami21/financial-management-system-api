@@ -43,8 +43,17 @@ model Users {
   password  String
   role  userRole     @default(USER)
   accounts Accounts[]
+  userHistory UsersHistory[]
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
+}
+
+model UsersHistory{
+  id          Int      @id @default(autoincrement())
+  action      String
+  createdAt   DateTime @default(now())
+  userId      Int
+  user        Users  @relation(fields: [userId], references: [id])
 }
 
 model Accounts{

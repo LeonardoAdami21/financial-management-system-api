@@ -32,6 +32,10 @@ export class AccountsService {
         throw new NotFoundException('User not found');
       }
       const account = await this.accountsRepository.create(dto, user.id);
+      await this.accountsRepository.userHistory(
+        user.id,
+        `Created account ${account.id} successfully`,
+      );
       return account;
     } catch (error) {
       throw new BadRequestException('Error creating account');
@@ -44,22 +48,22 @@ export class AccountsService {
       if (!account) {
         throw new NotFoundException('Account not found');
       }
-      return {balance: account.balance};
+      return { balance: account.balance };
     } catch (error) {
       throw new InternalServerErrorException('Error finding account');
     }
   }
 
-  async update(
-    id: number,
-    dto: UpdateAccountDto,
-    userId: number,
-  ){
+  async update(id: number, dto: UpdateAccountDto, userId: number) {
     try {
       const user = await this.accountsRepository.findAdminById(userId);
       if (!user) {
         throw new NotFoundException('User not found');
       }
+      await this.accountsRepository.userHistory(
+        user.id,
+        `Updated account ${id} successfully`,
+      );
       await this.accountsRepository.toggleActiveAccountStatus(id, dto, user.id);
       return { message: 'Account updated successfully' };
     } catch (error) {
@@ -73,6 +77,10 @@ export class AccountsService {
       if (!user) {
         throw new NotFoundException('User not found');
       }
+      await this.accountsRepository.userHistory(
+        user.id,
+        `Deleted account ${id} successfully`,
+      );
       await this.accountsRepository.delete(id, user.id);
       return { message: 'Account deleted successfully' };
     } catch (error) {

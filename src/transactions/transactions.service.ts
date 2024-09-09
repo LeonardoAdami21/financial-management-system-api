@@ -43,6 +43,10 @@ export class TransactionsService {
         accountId,
         amount,
       });
+      await this.transactionsRepository.userHistory(
+        account.userId,
+        `Withdrew ${amount} from account ${account.id}`,
+      );
       return transaction;
     } catch (error) {
       throw new InternalServerErrorException('Error withdrawing');
@@ -65,6 +69,10 @@ export class TransactionsService {
         accountId,
         amount,
       });
+      await this.transactionsRepository.userHistory(
+        account.userId,
+        `Deposited ${amount} to account ${account.id}`,
+      );
       return transaction;
     } catch (error) {
       throw new InternalServerErrorException('Error depositing amount');
@@ -92,27 +100,46 @@ export class TransactionsService {
         toAccountId,
         amount,
       });
+      await this.transactionsRepository.userHistory(
+        fromAccount.userId,
+        `Transferred ${amount} from account ${fromAccount.id} to account ${toAccount.id}`,
+      );
+      await this.transactionsRepository.userHistory(
+        toAccount.userId,
+        `Received ${amount} from account ${fromAccount.id} to account ${toAccount.id}`,
+      );
       return transaction;
     } catch (error) {
       throw new InternalServerErrorException('Error transfering amount');
     }
   }
 
-	async getAccountStatement(accountId: number, startDate: Date, endDate: Date) {
-		try {
-			const transactions = await this.transactionsRepository.getAccountStatement(accountId, startDate, endDate);
-			return transactions;
-		} catch (error) {
-			throw new InternalServerErrorException('Error getting account statement');
-		}
-	}
+  async getAccountStatement(accountId: number, startDate: Date, endDate: Date) {
+    try {
+      const formatedAccountId = Number(accountId);
+      const transactions =
+        await this.transactionsRepository.getAccountStatement(
+          +formatedAccountId,
+          startDate,
+          endDate,
+        );
+      return transactions;
+    } catch (error) {
+      throw new InternalServerErrorException('Error getting account statement');
+    }
+  }
 
-	async getAggregatedReport(startDate: Date, endDate: Date, type?: string) {
-		try {
-			const transactions = await this.transactionsRepository.getAggregatedReport(startDate, endDate, type);
-			return transactions;
-		} catch (error) {
-			throw new InternalServerErrorException('Error getting aggregated report');
-		}
-	}
+  async getAggregatedReport(startDate: Date, endDate: Date, type?: string) {
+    try {
+      const transactions =
+        await this.transactionsRepository.getAggregatedReport(
+          startDate,
+          endDate,
+          type,
+        );
+      return transactions;
+    } catch (error) {
+      throw new InternalServerErrorException('Error getting aggregated report');
+    }
+  }
 }
